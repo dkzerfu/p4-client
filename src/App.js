@@ -1,39 +1,47 @@
 import React from 'react'
-import {useState, useEffect} from 'react'
-import {io} from 'socket.io-client'
 import './App.css';
 import Chat from './components/Chat'
 import Sidebar from './components/Sidebar';
-
-let socket = null;
+import Pusher from 'parse-json'
+import axios from './axios'
+import {useState, useEffect} from 'react'
 
 const App = () => {
-    const [userName, setUsername] = useState("")
+  const [messages, setMessages] = useState([])
+
+  useEffect(async () => {
+    const response = await axios.get('api/messages/sync')
+    setMessages(response.data)
+  }, [])
+
+  useEffect(() => {
+    const pusher = new Pusher('428941c32f545141c1c0', {
+      cluster: 'mt1'
+    });
+  
+    const channel = pusher.subscribe('messages');
+    channel.bind('inserted', (data) => {
+      alert(JSON.stringify(data));
+      setMessages([...messages, data]) 
+    });
     
-    useEffect(() => {
-        // Ask the user for their name on page load
-        const name = prompt('Please enter your initials')
-        setUsername(name)
-        const URL = "http://localhost:3030"
-        // Setup socket connection 
-        socket = io(URL, {
-            query: {
-                userName: name
-            }
-        })
-        // Clean up the effect (aka on component unmount, close the connection)
-        return () => socket.disconnect();
-    }, [])
-    
-  console.log(userName)
+    return () => {
+      channel.unsubscribe()
+      channel.unbind_all()
+    }
+
+  }, [messages])
+console.log(messages)
+
   return (
-    <div className="app">
-      <div className="app__body">
-      <Sidebar socket={socket} userName={userName}/>
-      <Chat socket={socket} userName={userName}/>
+      <div className="app">
+        <div className="app__body">
+          <Sidebar />
+          <Chat />
+        </div>
       </div>
-    </div>
   );
+  
 }
 
 export default App;
