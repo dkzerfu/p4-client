@@ -3,11 +3,28 @@ import { AttachFile, InsertEmoticon, MoreVert, SearchOutlined } from '@material-
 import MicIcon from '@material-ui/icons/Mic'
 import React from 'react'
 import {useState, useEffect} from 'react'
+import { useParams } from 'react-router'
 import axios from '../axios'
 import "./Chat.css"
 
-const Chat = ({messages}) => {
+const Chat = ({messages, rooms}) => {
   const [input, setInput] = useState("")
+  const [seed, setSeed] = useState("")
+  const {roomId} = useParams()
+  const [roomName, setRoomName] = useState("")
+
+  useEffect(() => {
+    const room = rooms.filter(room => room._id === roomId)
+    console.log(room)
+    if (roomId && roomName > 0){
+      setRoomName(room[0].name)
+    }
+  }, [roomId])
+  
+  console.log(rooms)
+  useEffect(() => {
+    setSeed(Math.floor(Math.random() * 100))
+  }, [roomId])
 
   const sendMessage = async (e) => {
     e.preventDefault()
@@ -26,9 +43,9 @@ const Chat = ({messages}) => {
     <div className="chat">
       
       <div className="chat__header">
-        <Avatar />
+        <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`}/>
         <div className="chat__headerInfo">
-          <h3>Room name</h3>
+          <h3>{roomName}</h3>
           <p>Last seen at ...</p>
         </div>
         <div className="chat__headerRight">
