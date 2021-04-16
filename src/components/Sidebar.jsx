@@ -9,14 +9,17 @@ import SidebarChat from './SidebarChat'
 import {Redirect} from 'react-router-dom'
 
 
-const Sidebar = ({rooms, handleLogout, user}) => {
+const Sidebar = ({ rooms, handleLogout, user}) => {
+
   if(user) {
         return (
           <div className='sidebar'>
             
             <div className="sidebar__header">
+              <div>
               <Avatar src={user.photos[0].value}/>
               <p>{user.name.givenName}</p>
+              </div>
              <button onClick={handleLogout}>Logout</button>
               <div className="sidebar__headerRight">
                 <IconButton>

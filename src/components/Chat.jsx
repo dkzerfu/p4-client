@@ -7,30 +7,51 @@ import { useParams } from 'react-router'
 import axios from '../axios'
 import "./Chat.css"
 
-const Chat = ({ setRooms, rooms, user }) => {
+const Chat = ({ messages, rooms, user , setMessages}) => {
   const [input, setInput] = useState("")
   const [seed, setSeed] = useState("")
   const { roomId } = useParams()
+  const [selectedRoom, setSelectedRoom] = useState(null)
+  
   // const [roomName, setRoomName] = useState("")
   // const [messages, setMessages] = useState([])
-
-  useEffect(() => {
-    const room = rooms.filter(room => room._id === roomId)
+  // console.log(roomId)
+  // useEffect(() => {
+  //   const room = rooms.filter(room => room._id === roomId)
     
-    if (!room[0]) {
-      return
-    } else {
-      console.log("this is the messages", messages)
-      // setMessages(room[0].messages)
+  //   if (!room[0]) {
+  //     return
+  //   } else {
+  //     console.log("this is the messages", messages)
+  //     // setMessages(room[0].messages)
+  //   }
+  //   if (roomId && roomName > 0) {
+  //     setRoomName(room[0].name)
+  //   }
+  // }, [roomId, roomName, rooms, messages])
+
+  // useEffect(() => {
+  //   setSeed(Math.floor(Math.random() * 100))
+  // }, [roomId])
+  useEffect(() => {
+    for(let i = 0; i < rooms.length; i++){
+      if(roomId === rooms[i]._id){
+        setSelectedRoom(i)
+      }
     }
-    if (roomId && roomName > 0) {
-      setRoomName(room[0].name)
-    }
-  }, [roomId, roomName, rooms, messages])
+  }, [rooms, roomId])
 
   useEffect(() => {
-    setSeed(Math.floor(Math.random() * 100))
-  }, [roomId])
+    const settingMessage = async () => {
+      const messagesResponse = await axios.get('api/rooms/sync')
+      console.log(selectedRoom)
+      console.log(messagesResponse.data)
+      if(selectedRoom != null){
+        setMessages(messagesResponse.data[selectedRoom].messages)
+      }
+    }
+    settingMessage()
+  },[selectedRoom])
 
   const sendMessage = async (e) => {
     e.preventDefault()
@@ -43,7 +64,8 @@ const Chat = ({ setRooms, rooms, user }) => {
       received: false,
 
     })
-    setMessages(response.data.messages)
+    // console.log(response.data.messages[response.data.messages.length - 1])
+    // setMessages(response.data.messages)
     setInput('')
   }
 
@@ -57,7 +79,7 @@ const Chat = ({ setRooms, rooms, user }) => {
 
   // ))) : ""
 
-
+console.log(messages)
 
   return (
     <div className="chat">
@@ -65,7 +87,7 @@ const Chat = ({ setRooms, rooms, user }) => {
       <div className="chat__header">
         <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
         <div className="chat__headerInfo">
-          <h3>{roomName}</h3>
+          {/* <h3>{roomName}</h3> */}
           <p>Last seen at ...</p>
         </div>
         <div className="chat__headerRight">

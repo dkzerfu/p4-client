@@ -14,6 +14,12 @@ const App = () => {
   const [messages, setMessages] = useState([])
   const [rooms, setRooms] = useState([])
   const [user, setUser] = useState(null)
+  
+  // const setMessages = (roomidx, messages) => {
+  //   let roomsCopy = rooms
+  //   roomsCopy[roomidx].messages = messages
+  //   setRooms(roomsCopy)
+  // }
 
   useEffect(() => {
     const token = localStorage.getItem('jwt')
@@ -34,8 +40,6 @@ const App = () => {
   useEffect(() => {
     const roomData = async () => {
       const roomsResponse = await axios.get('api/rooms/sync')
-      const MessagesResponse = await axios.get('api/messages/sync')
-      setMessages(MessagesResponse.data)
       setRooms(roomsResponse.data)
       
     }
@@ -47,14 +51,16 @@ const App = () => {
     });
     const channel = pusher.subscribe('messages');
     channel.bind('inserted', function(data) {
-      setMessages([...messages, data])
+      console.log(data.messages)
+      setMessages(data.messages)
+
     });
     return () => {
       channel.unsubscribe()
       channel.unbind_all()
     }
 
-  }, [messages])
+  }, [])
 
   useEffect(() => {
     const pusher = new Pusher('428941c32f545141c1c0', {
@@ -62,6 +68,7 @@ const App = () => {
     });
     const roomChannel = pusher.subscribe('rooms');
     roomChannel.bind('inserted', function(data) {
+      console.log(data)
       setRooms([...rooms, data])
     });
     return () => {
@@ -77,10 +84,9 @@ const App = () => {
         setUser(null)
     }
 }
+
   return (
       <div className="app">
-        
-      
         <div className="app__body">
           <Router>
             <Switch>
@@ -95,7 +101,7 @@ const App = () => {
               </Route>
               <Route path="/rooms/:roomId">
                 <Sidebar rooms={rooms} handleLogout={handleLogout} user={user}/>
-                <Chat rooms={rooms} user={user} setRooms = {setRooms}/>
+                <Chat rooms={rooms} user={user} messages = {messages} setMessages={setMessages}/>
               </Route>
             </Switch>
           </Router>

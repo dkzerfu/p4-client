@@ -28,10 +28,11 @@
 
 .chat__body {
   flex: 1;
-  background-color: rgb(68, 100, 100);
+  background-color: rgb(209, 243, 234);
   background-repeat: repeat;
   background-position: center;
   padding: 30px;
+  border-radius: 5px;
   overflow: scroll;
 
 }
@@ -42,13 +43,14 @@
   padding: 10px;
   width: fit-content;
   border-radius: 10px;
-  background-color: #ffffff;
+  background-color: #d1d1d1;
   margin-bottom: 30px;
 }
 
 .chat__receiver {
   margin-left: auto;
-  background-color: rgba(18, 224, 104, 0.842);
+  background-color: rgb(8, 156, 241);
+  color: white;
 }
 
 .chat__timestamp {
@@ -61,7 +63,7 @@
   top: -15px;
   font-weight: 800;
   font-size: xx-small;
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 .chat__footer {
