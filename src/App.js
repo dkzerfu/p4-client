@@ -30,17 +30,17 @@ const App = () => {
         setUser(null)
     }
 }, [])
-  
+
   useEffect(() => {
     const roomData = async () => {
       const roomsResponse = await axios.get('api/rooms/sync')
       const MessagesResponse = await axios.get('api/messages/sync')
       setMessages(MessagesResponse.data)
       setRooms(roomsResponse.data)
+      
     }
     roomData()
   }, [])
-
   useEffect(() => {
     const pusher = new Pusher('428941c32f545141c1c0', {
       cluster: 'mt1'
@@ -77,7 +77,6 @@ const App = () => {
         setUser(null)
     }
 }
-
   return (
       <div className="app">
         
@@ -96,7 +95,7 @@ const App = () => {
               </Route>
               <Route path="/rooms/:roomId">
                 <Sidebar rooms={rooms} handleLogout={handleLogout} user={user}/>
-                <Chat messages={messages} rooms={rooms}/>
+                <Chat rooms={rooms} user={user} setRooms = {setRooms}/>
               </Route>
             </Switch>
           </Router>

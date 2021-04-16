@@ -10,13 +10,13 @@ import {Redirect} from 'react-router-dom'
 
 
 const Sidebar = ({rooms, handleLogout, user}) => {
-
   if(user) {
         return (
           <div className='sidebar'>
-        
+            
             <div className="sidebar__header">
-              <Avatar src="https://lh3.googleusercontent.com/ogw/ADGmqu8RRiIx0GnXIPJjE0tCeg2J5URDZo0_Wo8YfnwPDZ4=s83-c-mo"/>
+              <Avatar src={user.photos[0].value}/>
+              <p>{user.name.givenName}</p>
              <button onClick={handleLogout}>Logout</button>
               <div className="sidebar__headerRight">
                 <IconButton>
