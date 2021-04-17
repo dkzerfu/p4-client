@@ -20,7 +20,7 @@ const SaveToken = ({ setUser }) => {
     if(token) {
         return <Redirect to="/rooms" />
     } else {
-        return <Redirect to="/" />
+        return <Redirect to="/login" />
     }
 }
 

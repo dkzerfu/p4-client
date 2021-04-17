@@ -4,38 +4,24 @@ import MicIcon from '@material-ui/icons/Mic'
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router'
+import moment from "moment"
+import 'moment-timezone';
 import axios from '../axios'
 import "./Chat.css"
 
-const Chat = ({ messages, rooms, user , setMessages}) => {
+const Chat = ({ messages, rooms, user, setMessages }) => {
   const [input, setInput] = useState("")
   const [seed, setSeed] = useState("")
   const { roomId } = useParams()
   const [selectedRoom, setSelectedRoom] = useState(null)
-  
-  // const [roomName, setRoomName] = useState("")
-  // const [messages, setMessages] = useState([])
-  // console.log(roomId)
-  // useEffect(() => {
-  //   const room = rooms.filter(room => room._id === roomId)
-    
-  //   if (!room[0]) {
-  //     return
-  //   } else {
-  //     console.log("this is the messages", messages)
-  //     // setMessages(room[0].messages)
-  //   }
-  //   if (roomId && roomName > 0) {
-  //     setRoomName(room[0].name)
-  //   }
-  // }, [roomId, roomName, rooms, messages])
 
-  // useEffect(() => {
-  //   setSeed(Math.floor(Math.random() * 100))
-  // }, [roomId])
   useEffect(() => {
-    for(let i = 0; i < rooms.length; i++){
-      if(roomId === rooms[i]._id){
+    setSeed(Math.floor(Math.random() * 100))
+  }, [])
+
+  useEffect(() => {
+    for (let i = 0; i < rooms.length; i++) {
+      if (roomId === rooms[i]._id) {
         setSelectedRoom(i)
       }
     }
@@ -44,42 +30,26 @@ const Chat = ({ messages, rooms, user , setMessages}) => {
   useEffect(() => {
     const settingMessage = async () => {
       const messagesResponse = await axios.get('api/rooms/sync')
-      console.log(selectedRoom)
-      console.log(messagesResponse.data)
-      if(selectedRoom != null){
+      if (selectedRoom != null) {
         setMessages(messagesResponse.data[selectedRoom].messages)
       }
     }
     settingMessage()
-  },[selectedRoom])
+  }, [selectedRoom, setMessages])
 
   const sendMessage = async (e) => {
     e.preventDefault()
-    console.log('clicked')
-    const response = await axios.post("/api/messages/new", {
+    await axios.post("/api/messages/new", {
       id: roomId,
       message: input,
       name: user.name.givenName,
-      timestamp: Date.now(),
+      timestamp: moment().format("MM-DD-YYYY hh:mm:ss"),
       received: false,
 
     })
-    // console.log(response.data.messages[response.data.messages.length - 1])
-    // setMessages(response.data.messages)
+
     setInput('')
   }
-
-  // const messagess = messages ? (
-  // messages.map((message, index) => (
-  //   <p  key={index} className={message.name === user.name.givinName ? "chat__message chat__receiver" : "chat__message"}>
-  //     <span className="chat__name">{message.name}</span>
-  //     {message.message}
-  //     <span className="chat__timestamp">{message.timestamp}</span>
-  //   </p>
-
-  // ))) : ""
-
-console.log(messages)
 
   return (
     <div className="chat">
@@ -87,8 +57,8 @@ console.log(messages)
       <div className="chat__header">
         <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
         <div className="chat__headerInfo">
-          {/* <h3>{roomName}</h3> */}
-          <p>Last seen at ...</p>
+          <h3>{rooms[selectedRoom] ? rooms[selectedRoom].name : ""}</h3>
+          <p>Last Seen {rooms[selectedRoom] ? rooms[selectedRoom].messages[rooms[selectedRoom].messages.length - 1].timestamp : ""}</p>
         </div>
         <div className="chat__headerRight">
           <IconButton>
@@ -104,7 +74,7 @@ console.log(messages)
       </div>
       <div className="chat__body">
         {messages.map((message, index) => {
-          return <p key={index} className={message.name === user.name.givenName ? "chat__message chat__receiver" : "chat__message"}>
+          return <p key={index} className={user ? (message.name === user.name.givenName ? "chat__message chat__receiver" : "chat__message") : ""}>
             <span className="chat__name">{message.name}</span>
             {message.message}
             <span className="chat__timestamp">{message.timestamp}</span>
