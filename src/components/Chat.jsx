@@ -15,6 +15,8 @@ const Chat = ({ messages, rooms, user, setMessages }) => {
   const { roomId } = useParams()
   const [selectedRoom, setSelectedRoom] = useState(null)
 
+
+
   useEffect(() => {
     setSeed(Math.floor(Math.random() * 100))
   }, [])
@@ -25,7 +27,7 @@ const Chat = ({ messages, rooms, user, setMessages }) => {
         setSelectedRoom(i)
       }
     }
-  }, [rooms, roomId])
+  }, [rooms, roomId, setSelectedRoom])
 
   useEffect(() => {
     const settingMessage = async () => {
@@ -57,8 +59,8 @@ const Chat = ({ messages, rooms, user, setMessages }) => {
       <div className="chat__header">
         <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
         <div className="chat__headerInfo">
-          <h3>{rooms[selectedRoom] ? rooms[selectedRoom].name : ""}</h3>
-          <p>Last Seen {rooms[selectedRoom] ? rooms[selectedRoom].messages[rooms[selectedRoom].messages.length - 1].timestamp : ""}</p>
+          <h3>{rooms[selectedRoom] ? rooms[selectedRoom].name.toUpperCase() : ""}</h3>
+          <p>Last Seen</p>
         </div>
         <div className="chat__headerRight">
           <IconButton>

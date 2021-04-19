@@ -9,7 +9,7 @@ import SidebarChat from './SidebarChat'
 import { Redirect } from 'react-router-dom'
 
 
-const Sidebar = ({ rooms, handleLogout, user }) => {
+const Sidebar = ({ rooms, handleLogout, user, selectedRoom }) => {
 
   if (user) {
     return (
@@ -51,7 +51,7 @@ const Sidebar = ({ rooms, handleLogout, user }) => {
         <div className="sidebar__chats">
           <SidebarChat addNewChat />
           {rooms.map((room, index) => (
-            <SidebarChat key={index} id={room._id} name={room.name} />
+            <SidebarChat key={index} id={room._id} name={room.name} room={room} />
           ))}
         </div>
 

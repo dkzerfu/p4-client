@@ -1,4 +1,4 @@
-import {GoogleLoginButton} from 'react-social-login-buttons'
+import { GoogleLoginButton } from 'react-social-login-buttons'
 import React from 'react'
 import "./Login.css"
 
@@ -11,7 +11,7 @@ const Login = (props) => {
     console.log('google is clicked')
 
   }
-  
+
 
   return (
     <div className="login">
@@ -19,7 +19,7 @@ const Login = (props) => {
         <div className="login__text">
           <h1>Sign in to ChatRoom</h1>
         </div>
-        <GoogleLoginButton onClick={handleGoogleClick}/>
+        <GoogleLoginButton onClick={handleGoogleClick} />
       </div>
     </div>
   )

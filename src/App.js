@@ -15,6 +15,8 @@ const App = () => {
   const [rooms, setRooms] = useState([])
   const [user, setUser] = useState(null)
 
+
+
   useEffect(() => {
     const token = localStorage.getItem('jwt')
     try {
